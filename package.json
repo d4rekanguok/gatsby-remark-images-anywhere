@@ -1,0 +1,28 @@
+{
+  "name": "gatsby-remark-images-extra",
+  "version": "1.0.0",
+  "description": "Handle images with relative, absolute, remote path for gatsby-transformer-remark",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d4rekanguok/gatsby-remark-images-extra.git"
+  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "remark",
+    "remark-images"
+  ],
+  "author": "Derek Nguyen <derek@penandpillow.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/d4rekanguok/gatsby-remark-images-extra/issues"
+  },
+  "homepage": "https://github.com/d4rekanguok/gatsby-remark-images-extra#readme",
+  "devDependencies": {
+    "typescript": "^3.5.3"
+  }
+}
