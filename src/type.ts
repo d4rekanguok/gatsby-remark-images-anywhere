@@ -42,7 +42,7 @@ export type CreateMarkup = (args: CreateMarkupArgs) => string;
 
 export interface Options {
   plugins: unknown[];
-  publicDir?: string;
+  staticDir?: string;
   createMarkup?: CreateMarkup;
   sharpMethod: 'fluid' | 'fixed' | 'resize';
   [key: string]: unknown;

@@ -21,7 +21,7 @@ const addImage = async ({
 }: Args, pluginOptions: Options) => {
   const { 
     plugins, 
-    publicDir = 'public',
+    staticDir = 'static',
     createMarkup = defaultMarkup,
     sharpMethod = 'fluid',
     ...imageOptions
@@ -66,8 +66,13 @@ const addImage = async ({
       let filePath: string
       if (url[0] === '.') filePath = path.join(dirPath, url)
       // handle path returned from netlifyCMS & friends (/assets/image.png)
-      else filePath = path.join(directory, publicDir, url)
-  
+      else filePath = path.join(directory, staticDir, url)
+      console.log(url, filePath)
+      console.log(url, filePath)
+      console.log(url, filePath)
+      console.log(url, filePath)
+      console.log(url, filePath)
+      console.log(url, filePath)
       gImgFileNode = files.find(fileNode => 
         (fileNode.absolutePath && fileNode.absolutePath === filePath))
     }
