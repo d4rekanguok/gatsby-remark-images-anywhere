@@ -1,4 +1,7 @@
 import { createRemoteFileNode } from 'gatsby-source-filesystem'
+import sharp from 'gatsby-plugin-sharp'
+
+import { SharpResult } from './type'
 
 export const downloadImage = async ({
   id,
@@ -51,4 +54,26 @@ export const downloadImage = async ({
   }
 
   return imageFileNode
+}
+
+export const processImage = async ({
+  file,
+  reporter,
+  cache,
+  pathPrefix,
+  sharpMethod,
+  imageOptions,
+}): Promise<SharpResult> => {
+  const args = {
+    pathPrefix,
+    ...imageOptions,
+  }
+  const getImage = sharp[sharpMethod]
+
+  return getImage({
+    file,
+    args,
+    reporter,
+    cache,
+  })
 }

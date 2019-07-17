@@ -1,44 +1,11 @@
 import path = require('path')
-import parse5 = require('parse5')
 import select = require('unist-util-select')
-import sharp = require('gatsby-plugin-sharp')
 
-import { downloadImage } from './util-download-image'
-
-interface RemarkNode {
-  type: string;
-  url?: string;
-  value?: string;
-  children?: RemarkNode[];
-  [key: string]: any;
-}
+import { RemarkNode, Args, Options, CreateMarkupArgs } from './type'
+import { downloadImage, processImage } from './util-download-image'
+import { toMdNode } from './util-html-to-md'
 
 const defaultMarkup = ({ src }) => `<img class="gatsby-remark-images-extra" src="${src}"/>`
-
-const toMdNode = (node: RemarkNode): RemarkNode | null => {
-  const value = node.value
-  const parsed = parse5.parseFragment(value)
-  const imgNode = parsed.childNodes.find(node => node.tagName === 'img')
-  const attrs = imgNode.attrs.reduce((acc, cur) => {
-    const { name, value } = cur
-    acc[name] = value
-    return acc
-  }, {})
-
-  // no src? don't touch it
-  if (!attrs.src) return null
-
-  // store origin info & mutate node
-  const original = { ...node }
-  node.type = 'image'
-  node.url = attrs.src
-  node.title = attrs.title
-  node.alt = attrs.alt
-  node.data = {}
-  node.data.original = original
-
-  return node
-}
 
 const addImage = async ({
   markdownAST: mdast, 
@@ -51,14 +18,14 @@ const addImage = async ({
   reporter, 
   cache, 
   pathPrefix,
-}, pluginOptions) => {
+}: Args, pluginOptions: Options) => {
   const { 
     plugins, 
     publicDir = 'public',
     createMarkup = defaultMarkup,
     sharpMethod = 'fluid',
     ...imageOptions
-  } = pluginOptions;
+  } = pluginOptions
 
   if (['fluid', 'fixed', 'resize'].indexOf(sharpMethod) < 0) {
     reporter.panic(`'sharpMethod' only accepts 'fluid', 'fixed' or 'resize', got ${sharpMethod} instead.`);
@@ -81,14 +48,6 @@ const addImage = async ({
     if (!url) return
 
     let gImgFileNode
-
-    console.log(`
-
-        ${url}
-        ohboy here it goes   
-
-    `)
-
     if (url.includes('http')) {
       // handle remote path
       gImgFileNode = await downloadImage({
@@ -102,42 +61,35 @@ const addImage = async ({
         createNodeId,
         reporter,
       })
-      console.log(gImgFileNode.id, '<--------- here')
     } else {
-      // handle relative path
+      // handle relative path (./image.png, ../image.png)
       let filePath: string
-
       if (url[0] === '.') filePath = path.join(dirPath, url)
+      // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, publicDir, url)
   
       gImgFileNode = files.find(fileNode => 
         (fileNode.absolutePath && fileNode.absolutePath === filePath))
-      if (!gImgFileNode) return
     }
+    if (!gImgFileNode) return
 
-    const args = {
-      pathPrefix,
-      withWebp: false,
-      ...imageOptions,
-    }
-    const getImage = sharp[sharpMethod]
-
-    let imageResult = await getImage({
+    const imageResult = await processImage({
       file: gImgFileNode,
-      args,
       reporter,
       cache,
+      pathPrefix,
+      sharpMethod,
+      imageOptions,
     })
-
     if (!imageResult) return
 
+    // mutate node
     const data = {
       title: node.title,
       alt: node.alt,
       originSrc: node.url,
       ...imageResult
     }
-
     node.type = 'html'
     node.value = createMarkup(data)
 

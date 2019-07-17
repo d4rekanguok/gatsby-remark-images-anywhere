@@ -1,3 +1,5 @@
 node_modules
 index.js
 util-download-image.js
+util-html-to-md.js
+type.js
