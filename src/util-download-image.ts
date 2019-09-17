@@ -45,7 +45,7 @@ export const downloadImage = async ({
       if (fileNode) {
         imageFileNode = fileNode
         await cache.set(mediaDataCacheKey, {
-          fileNodeId: fileNode.id
+          fileNodeId: fileNode.id,
         })
       }
     } catch (e) {
@@ -64,6 +64,12 @@ export const processImage = async ({
   sharpMethod,
   imageOptions,
 }): Promise<SharpResult> => {
+  const fileType = file.extension
+  if (fileType === 'gif' || fileType == 'svg') {
+    console.log('#############################')
+    console.log(`${file.name} is a GIF or SVG!`)
+  }
+
   const args = {
     pathPrefix,
     ...imageOptions,
