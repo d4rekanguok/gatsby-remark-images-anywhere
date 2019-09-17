@@ -55,36 +55,37 @@ const defaultMarkup = ({
         <div class="gria-image-padding" style="${styles.imagePadding}"></div>
 
         ${comment('show a solid background color.')}
-        <div class="gria-image-title" title="${alt}" style="${
-      styles.solidPlaceholder
-    }"></div>
+        <div
+          class="gria-image-title"
+          title="${alt}"
+          style="${styles.solidPlaceholder}">
+        </div>
 
-        ${props.base64 &&
-          `
-          ${comment('show the blurry base64 image.')}
-          <img class="gria-base64-placeholder" src="${
-            props.base64
-          }" title="${alt}" alt="${alt}" style="${styles.imagePlaceholder}">
-        `}
+        ${comment('show the blurry base64 image.')}
+        <img
+          class="gria-base64-placeholder"
+          src="${props.base64}"
+          title="${alt}"
+          alt="${alt}"
+          style="${styles.imagePlaceholder}"
+        >
 
-        ${props.tracedSVG &&
-          `
-          ${comment('show a traced SVG image.')}
-          <img class="gria-tracedSVG-placeholder" src="${
-            props.tracedSVG
-          }" title="${alt}" alt="${alt}" style="${styles.imagePlaceholder}">
-        `}
+        ${comment('show a traced SVG image.')}
+        <img
+          class="gria-tracedSVG-placeholder"
+          src="${props.tracedSVG}"
+          title="${alt}"
+          alt="${alt}"
+          style="${styles.imagePlaceholder}"
+        >
 
         ${comment('load the image sources.')}
         <picture classname="gria-image-sources">
-          <source
-            ${props.srcSet && `srcset="${props.srcSet}"`}
-            ${props.sizes && `sizes="${props.sizes}"`}
-          >
+          <source srcset="${props.srcSet}" sizes="${props.sizes}">
           <img
             src="${src}"
-            ${props.srcSet && `srcset="${props.srcSet}"`}
-            ${props.sizes && `sizes="${props.sizes}"`}
+            srcset="${props.srcSet}"
+            sizes="${props.sizes}"
             title="${alt}"
             alt="${alt}"
             loading="lazy"
@@ -95,14 +96,11 @@ const defaultMarkup = ({
         ${comment('inefficiently add noscript support')}
         <noscript>
           <picture classname="gria-image-sources">
-            <source
-              ${props.srcSet && `srcset="${props.srcSet}"`}
-              ${props.sizes && `sizes="${props.sizes}"`}
-            >
+            <source srcset="${props.srcSet}" sizes="${props.sizes}">
             <img
               src="${src}"
-              ${props.srcSet && `srcset="${props.srcSet}"`}
-              ${props.sizes && `sizes="${props.sizes}"`}
+              srcset="${props.srcSet}"
+              sizes="${props.sizes}"
               title="${alt}"
               alt="${alt}"
               loading="lazy"
