@@ -56,7 +56,7 @@ const defaultMarkup = ({
 
         ${comment('show a solid background color.')}
         <div
-          class="gria-image-title"
+          class="gria-solid-placeholder"
           title="${alt}"
           style="${styles.solidPlaceholder}">
         </div>
@@ -93,7 +93,7 @@ const defaultMarkup = ({
           >
         </picture>
 
-        ${comment('inefficiently add noscript support')}
+        ${comment('(inefficiently) add noscript support.')}
         <noscript>
           <picture classname="gria-image-sources">
             <source srcset="${props.srcSet}" sizes="${props.sizes}">
@@ -112,6 +112,7 @@ const defaultMarkup = ({
     `
   }
 
+  // TODO: markup for the remaining sharpMethods, placeholder below:
   if (props.sharpMethod === 'fixed' || props.sharpMethod === 'resize') {
     return `<img src="${src}" alt="${alt}">`
   }
