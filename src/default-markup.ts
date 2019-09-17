@@ -9,21 +9,6 @@ const defaultMarkup = ({
   // fixed: base64, srcSet, tracedSVG, width, height
   // resize: absolutePath, finishedPromise, tracedSVG, width, height
 }) => {
-  let fluid, fixed, resize
-  if (props.presentationHeight) {
-    fluid = true
-    fixed = false
-    resize = false
-  } else if (props.absolutePath) {
-    resize = true
-    fixed = false
-    fluid = false
-  } else {
-    fixed = true
-    fluid = false
-    resize = false
-  }
-
   const styles = {
     imageWrapper: `
       position: relative;
@@ -62,7 +47,7 @@ const defaultMarkup = ({
   // this is silly, but I wanted comments to be clearer during development:
   const comment = text => `<!--${text}-->`
 
-  if (fluid) {
+  if (props.sharpMethod === 'fluid') {
     return `
       <div class="gria-image-wrapper" style="${styles.imageWrapper}">
 
@@ -129,7 +114,7 @@ const defaultMarkup = ({
     `
   }
 
-  if (fixed || resize) {
+  if (props.sharpMethod === 'fixed' || props.sharpMethod === 'resize') {
     return `<img src="${src}" alt="${alt}">`
   }
 }
