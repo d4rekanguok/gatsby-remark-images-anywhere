@@ -67,12 +67,7 @@ const addImage = async ({
       if (url[0] === '.') filePath = path.join(dirPath, url)
       // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, staticDir, url)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
+      
       gImgFileNode = files.find(fileNode => 
         (fileNode.absolutePath && fileNode.absolutePath === filePath))
     }
