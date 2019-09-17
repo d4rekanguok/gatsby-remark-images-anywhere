@@ -28,7 +28,6 @@ const defaultMarkup = ({
     imageWrapper: `
       position: relative;
       overflow: hidden;
-      background-color: #ffffff;
     `,
     imagePadding: `
       width: 100%;
@@ -38,23 +37,21 @@ const defaultMarkup = ({
     solidPlaceholder: `
       background-color: #ffffff;
       position: absolute;
-      inset: 0px;
+      top: 0; bottom: 0; left: 0; right: 0;
     `,
     // derek, you mentioned adding blur up in onClientEntry, but I'll leave this here for now:
-    // (transform property is for safari fix)
     imagePlaceholder: `
       position: absolute;
-      inset: 0px;
+      top: 0; bottom: 0; left: 0; right: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center center;
       filter: blur(50px);
-      transform: scale(1);
     `,
     imageTag: `
       position: absolute;
-      inset: 0px;
+      top: 0; bottom: 0; left: 0; right: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
