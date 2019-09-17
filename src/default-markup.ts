@@ -50,7 +50,7 @@ const defaultMarkup = ({
   }
 
   // this is silly, but I wanted comments to be clearer during development:
-  const comment = (text) =>{ return `<!--${text}-->`}
+  const comment = text => `<!--${text}-->`
 
   return `
     <div class="gria-image-wrapper" style="${styles.imageWrapper}">
