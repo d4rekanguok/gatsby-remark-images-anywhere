@@ -9,8 +9,6 @@ const defaultMarkup = ({
     // fixed: base64, srcSet, tracedSVG, width, height
     // resize: absolutePath, finishedPromise, tracedSVG, width, height
 }) => {
-  console.log("######################################################")
-  console.log(props)
 
   const styles = {
     imageWrapper: `

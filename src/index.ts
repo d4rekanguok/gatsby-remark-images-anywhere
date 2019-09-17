@@ -4,12 +4,7 @@ import select = require('unist-util-select')
 import { RemarkNode, Args, Options, CreateMarkupArgs } from './type'
 import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
-<<<<<<< HEAD
-import defaultMarkup from "./default-markup"
-=======
-
-const defaultMarkup = ({ src }: CreateMarkupArgs) => `<img class="gatsby-remark-images-extra" src="${src}"/>`
->>>>>>> 8fc05f6ba710b9b9adf45b646236c6947360b243
+import defaultMarkup from './default-markup'
 
 const addImage = async ({
   markdownAST: mdast,
@@ -71,18 +66,8 @@ const addImage = async ({
       if (url[0] === '.') filePath = path.join(dirPath, url)
       // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, staticDir, url)
-<<<<<<< HEAD
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      console.log(url, filePath)
-      gImgFileNode = files.find(fileNode =>
-=======
 
-      gImgFileNode = files.find(fileNode => 
->>>>>>> 8fc05f6ba710b9b9adf45b646236c6947360b243
+      gImgFileNode = files.find(fileNode =>
         (fileNode.absolutePath && fileNode.absolutePath === filePath))
     }
     if (!gImgFileNode) return
