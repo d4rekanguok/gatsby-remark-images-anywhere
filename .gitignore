@@ -3,3 +3,9 @@ index.js
 util-download-image.js
 util-html-to-md.js
 type.js
+.prettierignore
+.prettierrc
+default-markup.js
+package-lock.json
+package.json
+.vscode/settings.json

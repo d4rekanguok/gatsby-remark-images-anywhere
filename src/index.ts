@@ -4,23 +4,22 @@ import select = require('unist-util-select')
 import { RemarkNode, Args, Options, CreateMarkupArgs } from './type'
 import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
-
-const defaultMarkup = ({ src }) => `<img class="gatsby-remark-images-extra" src="${src}"/>`
+import defaultMarkup from "./default-markup"
 
 const addImage = async ({
-  markdownAST: mdast, 
+  markdownAST: mdast,
   markdownNode,
   actions,
   store,
-  files, 
+  files,
   getNode,
   createNodeId,
-  reporter, 
-  cache, 
+  reporter,
+  cache,
   pathPrefix,
 }: Args, pluginOptions: Options) => {
-  const { 
-    plugins, 
+  const {
+    plugins,
     staticDir = 'static',
     createMarkup = defaultMarkup,
     sharpMethod = 'fluid',
@@ -73,7 +72,7 @@ const addImage = async ({
       console.log(url, filePath)
       console.log(url, filePath)
       console.log(url, filePath)
-      gImgFileNode = files.find(fileNode => 
+      gImgFileNode = files.find(fileNode =>
         (fileNode.absolutePath && fileNode.absolutePath === filePath))
     }
     if (!gImgFileNode) return
