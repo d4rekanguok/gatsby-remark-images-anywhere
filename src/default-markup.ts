@@ -27,6 +27,7 @@ const defaultMarkup = ({
       inset: 0px;
     `,
     // derek, you mentioned adding blur up in onClientEntry, but I'll leave this here for now:
+    // (transform property is for safari fix)
     imagePlaceholder: `
       position: absolute;
       inset: 0px;
@@ -34,8 +35,8 @@ const defaultMarkup = ({
       height: 100%;
       object-fit: cover;
       object-position: center center;
-      filter: "blur(50px)",
-      transform: "scale(1)", /* for safari */
+      filter: blur(50px);
+      transform: scale(1);
     `,
     imageTag: `
       position: absolute;
