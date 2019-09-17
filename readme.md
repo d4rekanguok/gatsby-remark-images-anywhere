@@ -112,9 +112,8 @@ Your projects need to have...
     quality: 50,
   }
 }
+```
 
 ## Example usage
 
 - [Codesandbox demo](https://codesandbox.io/s/gatsby-remark-images-anywhere-remark-custom-component-lazy-load-007vo) of using this plugin in combination with [`gatsby-transformer-remark` custom component](https://using-remark.gatsbyjs.org/custom-components/) to achieve `gatsby-image`-like benefits (blur up, lazy loading, aspect-ratio).
-
-```
