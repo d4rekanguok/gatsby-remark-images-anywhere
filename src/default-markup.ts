@@ -10,38 +10,71 @@ const defaultMarkup = ({
   // resize: absolutePath, finishedPromise, tracedSVG, width, height
 }) => {
   const styles = {
-    imageWrapper: `
-      position: relative;
-      overflow: hidden;
-    `,
-    imagePadding: `
-      width: 100%;
-      padding-bottom: ${100 / aspectRatio}%
-    `,
-    // temporary, would be nice to get dominate color of image passed in props
-    solidPlaceholder: `
-      background-color: #ffffff;
-      position: absolute;
-      top: 0; bottom: 0; left: 0; right: 0;
-    `,
-    // derek, you mentioned adding blur up in onClientEntry, but I'll leave this here for now:
-    imagePlaceholder: `
-      position: absolute;
-      top: 0; bottom: 0; left: 0; right: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      filter: blur(50px);
-    `,
-    imageTag: `
-      position: absolute;
-      top: 0; bottom: 0; left: 0; right: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-    `,
+    fluid: {
+      imageWrapper: `
+        position: relative;
+        overflow: hidden;
+      `,
+      imagePadding: `
+        width: 100%;
+        padding-bottom: ${100 / aspectRatio}%;
+      `,
+      // temporary, would be nice to get dominate color of image passed in props
+      solidPlaceholder: `
+        background-color: #ffffff;
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+      `,
+      // derek, you mentioned adding blur up in onClientEntry, but I'll leave this here for now:
+      imagePlaceholder: `
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        filter: blur(50px);
+      `,
+      imageTag: `
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      `,
+    },
+    fixed: {
+      imageWrapper: `
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: ${props.width || 'auto'};
+        height: ${props.height || 'auto'};
+      `,
+      solidPlaceholder: `
+        background-color: ${props.backgroundColor ||
+          props.dominateColor ||
+          'inherit'};
+        width: ${props.width || 'auto'};
+        height: ${props.height || 'auto'};
+      `,
+      imagePlaceholder: `
+        width: ${props.width || 'auto'};
+        height: ${props.height || 'auto'};
+        object-fit: cover;
+        object-position: center center;
+        filter: blur(50px);
+      `,
+      imageTag: `
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      `,
+    },
   }
 
   // this is silly, but I wanted comments to be clearer during development:
@@ -49,16 +82,18 @@ const defaultMarkup = ({
 
   if (props.sharpMethod === 'fluid') {
     return `
-      <div class="gria-image-wrapper" style="${styles.imageWrapper}">
+      <div class="gria-image-wrapper" style="${styles.fluid.imageWrapper}">
 
         ${comment('preserve the aspect ratio')}
-        <div class="gria-image-padding" style="${styles.imagePadding}"></div>
+        <div class="gria-image-padding" style="${
+          styles.fluid.imagePadding
+        }"></div>
 
         ${comment('show a solid background color.')}
         <div
           class="gria-solid-placeholder"
           title="${alt}"
-          style="${styles.solidPlaceholder}">
+          style="${styles.fluid.solidPlaceholder}">
         </div>
 
         ${comment('show the blurry base64 image.')}
@@ -67,7 +102,7 @@ const defaultMarkup = ({
           src="${props.base64}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.imagePlaceholder}"
+          style="${styles.fluid.imagePlaceholder}"
         >
 
         ${comment('show a traced SVG image.')}
@@ -76,7 +111,7 @@ const defaultMarkup = ({
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.imagePlaceholder}"
+          style="${styles.fluid.imagePlaceholder}"
         >
 
         ${comment('load the image sources.')}
@@ -89,7 +124,7 @@ const defaultMarkup = ({
             title="${alt}"
             alt="${alt}"
             loading="lazy"
-            style="${styles.imageTag}"
+            style="${styles.fluid.imageTag}"
           >
         </picture>
 
@@ -104,7 +139,7 @@ const defaultMarkup = ({
               title="${alt}"
               alt="${alt}"
               loading="lazy"
-              style="${styles.imageTag}"
+              style="${styles.fluid.imageTag}"
             >
           </picture>
         </noscript>
@@ -112,8 +147,68 @@ const defaultMarkup = ({
     `
   }
 
-  // TODO: markup for the remaining sharpMethods, placeholder below:
-  if (props.sharpMethod === 'fixed' || props.sharpMethod === 'resize') {
+  if (props.sharpMethod === 'fixed') {
+    return `
+      <div class="gria-image-wrapper" style="${styles.fixed.imageWrapper}">
+
+        ${comment('show a solid background color.')}
+        <div
+          class="gria-solid-placeholder"
+          title="${alt}"
+          style="${styles.fixed.solidPlaceholder}">
+        </div>
+
+        ${comment('show the blurry base64 image.')}
+        <img
+          class="gria-base64-placeholder"
+          src="${props.base64}"
+          title="${alt}"
+          alt="${alt}"
+          style="${styles.fixed.imagePlaceholder}"
+        >
+
+        ${comment('show a traced SVG image.')}
+        <img
+          class="gria-tracedSVG-placeholder"
+          src="${props.tracedSVG}"
+          title="${alt}"
+          alt="${alt}"
+          style="${styles.fixed.imagePlaceholder}"
+        >
+
+        ${comment('load the image sources.')}
+        <picture classname="gria-image-sources">
+          <source srcset="${props.srcSet}">
+          <img
+            src="${src}"
+            srcset="${props.srcSet}"
+            title="${alt}"
+            alt="${alt}"
+            loading="lazy"
+            style="${styles.fixed.imageTag}"
+          >
+        </picture>
+
+        ${comment('(inefficiently) add noscript support.')}
+        <noscript>
+          <picture classname="gria-image-sources">
+            <source srcset="${props.srcSet}">
+            <img
+              src="${src}"
+              srcset="${props.srcSet}"
+              title="${alt}"
+              alt="${alt}"
+              loading="lazy"
+              style="${styles.fixed.imageTag}"
+            >
+          </picture>
+        </noscript>
+      </div>
+    `
+  }
+
+  // TODO: markup for the resize sharpMethods (?), placeholder below:
+  if (props.sharpMethod === 'resize') {
     return `<img src="${src}" alt="${alt}">`
   }
 }
