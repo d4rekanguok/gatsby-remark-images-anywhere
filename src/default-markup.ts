@@ -35,6 +35,14 @@ const defaultMarkup = ({
         object-position: center center;
         filter: blur(50px);
       `,
+      svgPlaceholder: `
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      `,
       imageTag: `
         position: absolute;
         top: 0; bottom: 0; left: 0; right: 0;
@@ -65,6 +73,14 @@ const defaultMarkup = ({
         object-fit: cover;
         object-position: center center;
         filter: blur(50px);
+      `,
+      svgPlaceholder: `
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
       `,
       imageTag: `
         position: absolute;
@@ -111,7 +127,7 @@ const defaultMarkup = ({
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.fluid.imagePlaceholder}"
+          style="${styles.fluid.svgPlaceholder}"
         >
 
         ${comment('load the image sources.')}
@@ -173,7 +189,7 @@ const defaultMarkup = ({
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.fixed.imagePlaceholder}"
+          style="${styles.fixed.svgPlaceholder}"
         >
 
         ${comment('load the image sources.')}
