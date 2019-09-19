@@ -160,7 +160,7 @@ const defaultMarkup = ({
           </picture>
         </noscript>
       </div>
-    `
+    `.trim()
   }
 
   if (props.sharpMethod === 'fixed') {
@@ -220,12 +220,12 @@ const defaultMarkup = ({
           </picture>
         </noscript>
       </div>
-    `
+    `.trim()
   }
 
   // TODO: markup for the resize sharpMethods (?), placeholder below:
   if (props.sharpMethod === 'resize') {
-    return `<img src="${src}" alt="${alt}">`
+    return `<img src="${src}" alt="${alt}">`.trim()
   }
 }
 
