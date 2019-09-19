@@ -64,12 +64,6 @@ export const processImage = async ({
   sharpMethod,
   imageOptions,
 }): Promise<SharpResult> => {
-  const fileType = file.extension
-  if (fileType === 'gif' || fileType == 'svg') {
-    console.log('#############################')
-    console.log(`${file.name} is a GIF or SVG!`)
-  }
-
   const args = {
     pathPrefix,
     ...imageOptions,
