@@ -5,40 +5,29 @@ import { RemarkNode } from './type'
 export const toMdNode = (node: RemarkNode): RemarkNode | null => {
   const value = node.value
   const parsed = parse5.parseFragment(value)
+  const imgNode = parsed.childNodes.find(node => node.tagName === 'img')
 
-  const imgNodes = parsed.childNodes
-    .map(node => {
-      if (node.tagName === 'img') return node // return node if it is an img
-      if (node.childNodes) {
-        const childNode = node.childNodes.filter(childNode => {
-          if (childNode.tagName === 'img') return childNode
-        })
-        return childNode // return childNode if it is an img
-      }
-    })
-    .flat() // bring all objects to the same level
-    .filter(n => n) // remove undefined array entries
+  // not an img? don't touch it
+  if (!imgNode) return null
 
-  const imgNodeResults = imgNodes.map(imgNode => {
-    const attrs = imgNode.attrs.reduce((acc, cur) => {
-      const { name, value } = cur
-      acc[name] = value
-      return acc
-    }, {})
+  const attrs = imgNode.attrs.reduce((acc, cur) => {
+    const { name, value } = cur
+    acc[name] = value
+    return acc
+  }, {})
 
-    // no src? don't touch it
-    if (!attrs.src) return null
+  // no src? don't touch it
+  if (!attrs.src) return null
 
-    // store origin info & mutate node
-    const original = { ...node }
-    node.type = 'image'
-    node.value = ''
-    node.url = attrs.src
-    node.title = attrs.title
-    node.alt = attrs.alt
-    node.data = {}
-    node.data.original = original
-  })
+  // store origin info & mutate node
+  const original = { ...node }
+  node.type = 'image'
+  node.value = ''
+  node.url = attrs.src
+  node.title = attrs.title
+  node.alt = attrs.alt
+  node.data = {}
+  node.data.original = original
 
   return node
 }
