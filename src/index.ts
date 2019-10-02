@@ -57,11 +57,11 @@ const addImage = async (
 
   imgNodes.push(...htmlImgNodes)
   const processPromises = imgNodes.map(async node => {
-    const url = node.url
+    const url: string = node.url
     if (!url) return
 
     let gImgFileNode
-    if (url.includes('http')) {
+    if (url.startsWith('http')) {
       // handle remote path
       gImgFileNode = await downloadImage({
         id: markdownNode.id,
