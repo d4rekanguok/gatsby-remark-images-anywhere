@@ -1,12 +1,10 @@
-import { CreateMarkup } from './type'
+import { CreateMarkup, CreateMarkupArgs, MarkupOptions } from './type'
 
 const CLASS_WRAPPER = 'gria-image-wrapper'
 const CLASS_PADDING = 'gria-image-padding'
 const CLASS_LINK = 'gria-image-link'
 const CLASS_SOURCES = 'gria-image-sources'
-const CLASS_PH_SOLID = 'gria-solid-placeholder'
-const CLASS_PH_BASE64 = 'gria-base64-placeholder'
-const CLASS_PH_SVG = 'gria-tracedSVG-placeholder'
+const CLASS_PLACEHOLDER = 'gria-image-placeholder'
 
 const absoluteStyle = `
   position: absolute;
@@ -14,6 +12,10 @@ const absoluteStyle = `
   width: 100%;
   height: 100%;
 `
+
+type F = (arg: string) => string
+type Pipe = (...fs: F[]) => F
+const pipe: Pipe = (...fs) => x => fs.reduce((v, f) => f(v), x)
 
 /**
  * Only show comment during develop
@@ -34,53 +36,68 @@ const handleWrapperStyle: HandleWrapperStyle = (wrapperStyle, data) => {
   console.warn('[gatsby-remark-images-anywhere] wrapperStyle is expected to be either a string or a function.')
 }
 
-export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
-  if (!markupOptions) throw new Error('[gatsby-remark-images-anywhere] createMarkup: No options')
-  const {
-    loading,
-    linkImagesToOriginal,
-    showCaptions,
-    wrapperStyle,
-    backgroundColor,
-    tracedSVG,
-  } = markupOptions
+type ProcessMarkup = (data: CreateMarkupArgs, options: MarkupOptions, input: string) => string
+const processMainImage: ProcessMarkup = (data, options) => {
+  const { srcSet, src, alt } = data
+  const { loading } = options
 
-  const {
-    title,
-    alt,
-    originSrc,
-    aspectRatio,
-    src,
-    ...props
-    // fluid: base64, srcSet, scrSetType, sizes, originalImg, density, presentationWidth, presentationHeight
-    // fixed: base64, srcSet, tracedSVG, width, height
-    // resize: absolutePath, finishedPromise, tracedSVG, width, height
-  } = data
+  return `
+    <picture classname="${CLASS_SOURCES}">
+      <source srcset="${srcSet}">
+      <img
+        src="${src}"
+        srcset="${srcSet}"
+        title="${alt}"
+        alt="${alt}"
+        loading="${loading}"
+        style="
+          ${absoluteStyle}
+          object-fit: cover;
+          object-position: center center;"
+      >
+    </picture>
+  `
+}
 
+const processPlaceholder: ProcessMarkup = (data, options, input) => {
+  const { tracedSVG, base64 } = data
+  const { tracedSVG: enableSVG, blurUp, backgroundColor } = options
+
+  let placeholderData: null | string = null
+
+  if (enableSVG && tracedSVG) {
+    placeholderData = tracedSVG
+  }
+
+  if (blurUp && base64) {
+    placeholderData = base64
+  }
+
+  const markup = placeholderData
+    ? `
+      ${comment('show a placeholder image.')}
+      <div
+        class="${CLASS_PLACEHOLDER}"
+        style="
+          ${absoluteStyle}
+          background: ${backgroundColor} url(${placeholderData}) center / cover no-repeat;
+        "
+      ></div>
+    `
+    : ''
+  
+  return markup + input
+}
+
+const processWrapper: ProcessMarkup = (data, options, input) => {
+  const { sharpMethod, aspectRatio, width, height } = data
+  const { wrapperStyle } = options
   const processedWrapperStyle = handleWrapperStyle(wrapperStyle, data)
   
-  const styles = {
-    solidPlaceholder: `
-      background-color: ${backgroundColor};
-      ${absoluteStyle}
-    `,
-    imagePlaceholder: `
-      ${absoluteStyle}
-      object-fit: cover;
-      object-position: center center;
-      filter: blur(50px);
-    `,
-    svgPlaceholder: `
-      ${absoluteStyle}
-      object-fit: cover;
-      object-position: center center;
-    `,
-    imageTag: `
-      ${absoluteStyle}
-      object-fit: cover;
-      object-position: center center;
-    `,
-    fluid: {
+  let markup = ''
+
+  if (sharpMethod === 'fluid') {
+    const styles = {
       imageWrapper: `
         position: relative;
         overflow: hidden;
@@ -90,133 +107,74 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
         width: 100%;
         padding-bottom: ${100 / aspectRatio}%;
       `,
-    },
-    fixed: {
-      imageWrapper: `
-        position: relative;
-        overflow: hidden;
-        display: block;
-        width: ${props.width}px;
-        height: ${props.height}px;
-        ${processedWrapperStyle}
-      `,
-    },
-  }
+    };
 
-  let markup = ''
-
-  if (props.sharpMethod === 'fluid') {
     markup = `
-      <div class="${CLASS_WRAPPER}" style="${styles.fluid.imageWrapper}">
-
+      <div class="${CLASS_WRAPPER}" style="${styles.imageWrapper}">
+      
         ${comment('preserve the aspect ratio')}
-        <div class="${CLASS_PADDING}" style="${
-          styles.fluid.imagePadding
-        }"></div>
-
-        ${comment('show a solid background color.')}
-        <div
-          class="${CLASS_PH_SOLID}"
-          title="${alt}"
-          style="${styles.solidPlaceholder}">
-        </div>
-
-        ${comment('show the blurry base64 image.')}
-        <img
-          class="${CLASS_PH_BASE64}"
-          src="${props.base64}"
-          title="${alt}"
-          alt="${alt}"
-          style="${styles.imagePlaceholder}"
-        >
-
-        ${comment('show a traced SVG image.')}
-        <img
-          class="${CLASS_PH_SVG}"
-          src="${props.tracedSVG}"
-          title="${alt}"
-          alt="${alt}"
-          style="${styles.svgPlaceholder}"
-        >
-
-        ${comment('load the image sources.')}
-        <picture classname="${CLASS_SOURCES}">
-          <source srcset="${props.srcSet}" sizes="${props.sizes}">
-          <img
-            src="${src}"
-            srcset="${props.srcSet}"
-            sizes="${props.sizes}"
-            title="${alt}"
-            alt="${alt}"
-            loading="${loading}"
-            style="${styles.imageTag}"
-          >
-        </picture>
+          <div class="${CLASS_PADDING}" style="${
+            styles.imagePadding
+          }"></div>
+        
+        ${input}
       </div>
     `
   }
 
-  if (props.sharpMethod === 'fixed') {
+  if (sharpMethod === 'fixed') {
+    const styles = `
+      position: relative;
+      overflow: hidden;
+      display: block;
+      width: ${width}px;
+      height: ${height}px;
+      ${processedWrapperStyle}
+    `
+
     markup = `
-      <div class="${CLASS_WRAPPER}" style="${styles.fixed.imageWrapper}">
-
-        ${comment('show a solid background color.')}
-        <div
-          class="${CLASS_PH_SOLID}"
-          title="${alt}"
-          style="${styles.solidPlaceholder}">
-        </div>
-
-        ${comment('show the blurry base64 image.')}
-        <img
-          class="${CLASS_PH_BASE64}"
-          src="${props.base64}"
-          title="${alt}"
-          alt="${alt}"
-          style="${styles.imagePlaceholder}"
-        >
-
-        ${comment('show a traced SVG image.')}
-        <img
-          class="${CLASS_PH_SVG}"
-          src="${props.tracedSVG}"
-          title="${alt}"
-          alt="${alt}"
-          style="${styles.svgPlaceholder}"
-        >
-
-        ${comment('load the image sources.')}
-        <picture classname="${CLASS_SOURCES}">
-          <source srcset="${props.srcSet}">
-          <img
-            src="${src}"
-            srcset="${props.srcSet}"
-            title="${alt}"
-            alt="${alt}"
-            loading="${loading}"
-            style="${styles.imageTag}"
-          >
-        </picture>
+      <div class="${CLASS_WRAPPER}" style="${styles}">
+        ${input}
       </div>
     `
   }
 
-  // TODO: markup for the resize sharpMethods (?), placeholder below:
-  if (props.sharpMethod === 'resize') {
-    markup = `<img src="${src}" alt="${alt}">`
+  return markup
+}
+
+const processLinkToOriginal: ProcessMarkup = (data, options, input) => {
+  const { originalImg, src } = data
+  const { linkImagesToOriginal } = options
+
+  if (!linkImagesToOriginal) {
+    return input
   }
 
   // only fluid returns original image
-  if (linkImagesToOriginal) {
-    markup = `
-      <a 
-        class="${CLASS_LINK}"
-        target="_blank" 
-        rel="noopener"
-        style="display: block;"
-        href="${props.originalImg || src}"
-      >${markup}</a>`
-  }
-  
+  return  `
+    <a 
+      class="${CLASS_LINK}"
+      target="_blank" 
+      rel="noopener"
+      style="display: block;"
+      href="${originalImg || src}"
+    >${input}
+    </a>`
+}
+
+export const defaultMarkup: CreateMarkup = (data, options) => {
+  if (!options) throw new Error('[gatsby-remark-images-anywhere] createMarkup: No options')
+  const mainImage = processMainImage.bind(null, data, options)
+  const placeholder = processPlaceholder.bind(null, data, options)
+  const wrapper = processWrapper.bind(null, data, options)
+  const link = processLinkToOriginal.bind(null, data, options)
+
+  const markup = pipe(
+    mainImage,
+    placeholder,
+    wrapper,
+    link,
+  )('')
+
   return markup
 }

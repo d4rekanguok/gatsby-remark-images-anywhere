@@ -49,6 +49,7 @@ export interface MarkupOptions {
   wrapperStyle: string | Function;
   backgroundColor: string;
   tracedSVG: boolean | Object;
+  blurUp: boolean;
 }
 
 export type CreateMarkup = (args: CreateMarkupArgs, options?: MarkupOptions) => string;

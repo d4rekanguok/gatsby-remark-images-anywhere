@@ -34,6 +34,7 @@ const addImage = async (
     wrapperStyle = '',
     backgroundColor = '#fff',
     tracedSVG = false,
+    blurUp = true,
 
     ...imageOptions
   } = pluginOptions
@@ -115,6 +116,7 @@ const addImage = async (
       wrapperStyle,
       backgroundColor,
       tracedSVG,
+      blurUp,
     })
 
     return null
