@@ -36,10 +36,10 @@ export interface SharpResult {
 
 
 export interface CreateMarkupArgs extends SharpResult {
-    sharpMethod: SharpMethod;
-    originSrc: string;
-    title?: string;
-    alt?: string;
+  sharpMethod: SharpMethod;
+  originSrc: string;
+  title?: string;
+  alt?: string;
 }
 
 export interface MarkupOptions {
@@ -48,6 +48,7 @@ export interface MarkupOptions {
   showCaptions: boolean;
   wrapperStyle: string | Function;
   backgroundColor: string;
+  tracedSVG: boolean | Object;
 }
 
 export type CreateMarkup = (args: CreateMarkupArgs, options?: MarkupOptions) => string;

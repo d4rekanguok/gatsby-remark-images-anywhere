@@ -8,6 +8,13 @@ const CLASS_PH_SOLID = 'gria-solid-placeholder'
 const CLASS_PH_BASE64 = 'gria-base64-placeholder'
 const CLASS_PH_SVG = 'gria-tracedSVG-placeholder'
 
+const absoluteStyle = `
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+`
+
 /**
  * Only show comment during develop
  */
@@ -35,6 +42,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
     showCaptions,
     wrapperStyle,
     backgroundColor,
+    tracedSVG,
   } = markupOptions
 
   const {
@@ -52,6 +60,26 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
   const processedWrapperStyle = handleWrapperStyle(wrapperStyle, data)
   
   const styles = {
+    solidPlaceholder: `
+      background-color: ${backgroundColor};
+      ${absoluteStyle}
+    `,
+    imagePlaceholder: `
+      ${absoluteStyle}
+      object-fit: cover;
+      object-position: center center;
+      filter: blur(50px);
+    `,
+    svgPlaceholder: `
+      ${absoluteStyle}
+      object-fit: cover;
+      object-position: center center;
+    `,
+    imageTag: `
+      ${absoluteStyle}
+      object-fit: cover;
+      object-position: center center;
+    `,
     fluid: {
       imageWrapper: `
         position: relative;
@@ -62,75 +90,15 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
         width: 100%;
         padding-bottom: ${100 / aspectRatio}%;
       `,
-      // temporary, would be nice to get dominate color of image passed in props
-      solidPlaceholder: `
-        background-color: ${backgroundColor};
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-      `,
-      // derek, you mentioned adding blur up in onClientEntry, but I'll leave this here for now:
-      imagePlaceholder: `
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center center;
-        filter: blur(50px);
-      `,
-      svgPlaceholder: `
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center center;
-      `,
-      imageTag: `
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center center;
-      `,
     },
     fixed: {
       imageWrapper: `
         position: relative;
         overflow: hidden;
-        display: inline-block;
-        width: ${props.width || 'auto'};
-        height: ${props.height || 'auto'};
+        display: block;
+        width: ${props.width}px;
+        height: ${props.height}px;
         ${processedWrapperStyle}
-      `,
-      solidPlaceholder: `
-        background-color: 'inherit';
-        width: ${props.width || 'auto'};
-        height: ${props.height || 'auto'};
-      `,
-      imagePlaceholder: `
-        width: ${props.width || 'auto'};
-        height: ${props.height || 'auto'};
-        object-fit: cover;
-        object-position: center center;
-        filter: blur(50px);
-      `,
-      svgPlaceholder: `
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center center;
-      `,
-      imageTag: `
-        position: absolute;
-        top: 0; bottom: 0; left: 0; right: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center center;
       `,
     },
   }
@@ -150,7 +118,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
         <div
           class="${CLASS_PH_SOLID}"
           title="${alt}"
-          style="${styles.fluid.solidPlaceholder}">
+          style="${styles.solidPlaceholder}">
         </div>
 
         ${comment('show the blurry base64 image.')}
@@ -159,7 +127,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
           src="${props.base64}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.fluid.imagePlaceholder}"
+          style="${styles.imagePlaceholder}"
         >
 
         ${comment('show a traced SVG image.')}
@@ -168,7 +136,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.fluid.svgPlaceholder}"
+          style="${styles.svgPlaceholder}"
         >
 
         ${comment('load the image sources.')}
@@ -181,7 +149,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
             title="${alt}"
             alt="${alt}"
             loading="${loading}"
-            style="${styles.fluid.imageTag}"
+            style="${styles.imageTag}"
           >
         </picture>
       </div>
@@ -196,7 +164,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
         <div
           class="${CLASS_PH_SOLID}"
           title="${alt}"
-          style="${styles.fixed.solidPlaceholder}">
+          style="${styles.solidPlaceholder}">
         </div>
 
         ${comment('show the blurry base64 image.')}
@@ -205,7 +173,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
           src="${props.base64}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.fixed.imagePlaceholder}"
+          style="${styles.imagePlaceholder}"
         >
 
         ${comment('show a traced SVG image.')}
@@ -214,7 +182,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
-          style="${styles.fixed.svgPlaceholder}"
+          style="${styles.svgPlaceholder}"
         >
 
         ${comment('load the image sources.')}
@@ -226,7 +194,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
             title="${alt}"
             alt="${alt}"
             loading="${loading}"
-            style="${styles.fixed.imageTag}"
+            style="${styles.imageTag}"
           >
         </picture>
       </div>
