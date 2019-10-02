@@ -40,7 +40,7 @@ export const defaultMarkup: CreateMarkup = ({
       `,
       // temporary, would be nice to get dominate color of image passed in props
       solidPlaceholder: `
-        background-color: #ffffff;
+        background-color: ${backgroundColor};
         position: absolute;
         top: 0; bottom: 0; left: 0; right: 0;
       `,
