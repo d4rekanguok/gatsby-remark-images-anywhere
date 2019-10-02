@@ -1,0 +1,5 @@
+export const CLASS_WRAPPER = 'gria-image-wrapper'
+export const CLASS_PADDING = 'gria-image-padding'
+export const CLASS_LINK = 'gria-image-link'
+export const CLASS_IMAGE = 'gria-image'
+export const CLASS_PLACEHOLDER = 'gria-image-placeholder'

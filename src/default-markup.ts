@@ -1,10 +1,11 @@
 import { CreateMarkup, CreateMarkupArgs, MarkupOptions } from './type'
-
-const CLASS_WRAPPER = 'gria-image-wrapper'
-const CLASS_PADDING = 'gria-image-padding'
-const CLASS_LINK = 'gria-image-link'
-const CLASS_SOURCES = 'gria-image-sources'
-const CLASS_PLACEHOLDER = 'gria-image-placeholder'
+import {
+  CLASS_WRAPPER,
+  CLASS_PADDING,
+  CLASS_LINK,
+  CLASS_IMAGE,
+  CLASS_PLACEHOLDER,
+} from './constants'
 
 const absoluteStyle = `
   position: absolute;
@@ -42,9 +43,10 @@ const processMainImage: ProcessMarkup = (data, options) => {
   const { loading } = options
 
   return `
-    <picture classname="${CLASS_SOURCES}">
+    <picture>
       <source srcset="${srcSet}">
       <img
+        class="${CLASS_IMAGE}"
         src="${src}"
         srcset="${srcSet}"
         title="${alt}"

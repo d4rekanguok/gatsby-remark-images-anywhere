@@ -3,3 +3,5 @@
 !util-download-image.js
 !util-html-to-md.js
 !default-markup.js
+!gatsby-browser.js
+!constants.js
