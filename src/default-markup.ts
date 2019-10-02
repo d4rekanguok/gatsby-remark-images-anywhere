@@ -8,17 +8,15 @@ const comment: Comment = text => process.env.NODE_ENV !== 'production'
   ? `<!--${text}-->`
   : ``
 
-export const defaultMarkup: CreateMarkup = ({
-  title,
-  alt,
-  originSrc,
-  aspectRatio,
-  src,
-  ...props
-  // fluid: base64, srcSet, scrSetType, sizes, originalImg, density, presentationWidth, presentationHeight
-  // fixed: base64, srcSet, tracedSVG, width, height
-  // resize: absolutePath, finishedPromise, tracedSVG, width, height
-}, markupOptions) => {
+type HandleWrapperStyle = (wrapperStyle: string | Function, data: Object) => string
+const handleWrapperStyle: HandleWrapperStyle = (wrapperStyle, data) => {
+  if (typeof wrapperStyle === 'function') {
+    return wrapperStyle(data)
+  }
+  return wrapperStyle
+}
+
+export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
   if (!markupOptions) throw new Error('[gatsby-remark-images-anywhere] createMarkup: No options')
   const {
     loading,
@@ -27,12 +25,27 @@ export const defaultMarkup: CreateMarkup = ({
     wrapperStyle,
     backgroundColor,
   } = markupOptions
+
+  const {
+    title,
+    alt,
+    originSrc,
+    aspectRatio,
+    src,
+    ...props
+    // fluid: base64, srcSet, scrSetType, sizes, originalImg, density, presentationWidth, presentationHeight
+    // fixed: base64, srcSet, tracedSVG, width, height
+    // resize: absolutePath, finishedPromise, tracedSVG, width, height
+  } = data
+
+  const processedWrapperStyle = handleWrapperStyle(wrapperStyle, data)
   
   const styles = {
     fluid: {
       imageWrapper: `
         position: relative;
         overflow: hidden;
+        ${processedWrapperStyle}
       `,
       imagePadding: `
         width: 100%;
@@ -78,6 +91,7 @@ export const defaultMarkup: CreateMarkup = ({
         display: inline-block;
         width: ${props.width || 'auto'};
         height: ${props.height || 'auto'};
+        ${processedWrapperStyle}
       `,
       solidPlaceholder: `
         background-color: 'inherit';
