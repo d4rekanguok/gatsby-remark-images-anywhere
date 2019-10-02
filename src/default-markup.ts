@@ -153,26 +153,10 @@ export const defaultMarkup: CreateMarkup = ({
             sizes="${props.sizes}"
             title="${alt}"
             alt="${alt}"
-            loading=${loading}
+            loading="${loading}"
             style="${styles.fluid.imageTag}"
           >
         </picture>
-
-        ${comment('(inefficiently) add noscript support.')}
-        <noscript>
-          <picture classname="gria-image-sources">
-            <source srcset="${props.srcSet}" sizes="${props.sizes}">
-            <img
-              src="${src}"
-              srcset="${props.srcSet}"
-              sizes="${props.sizes}"
-              title="${alt}"
-              alt="${alt}"
-              loading="lazy"
-              style="${styles.fluid.imageTag}"
-            >
-          </picture>
-        </noscript>
       </div>
     `
   }
@@ -214,25 +198,10 @@ export const defaultMarkup: CreateMarkup = ({
             srcset="${props.srcSet}"
             title="${alt}"
             alt="${alt}"
-            loading="lazy"
+            loading="${loading}"
             style="${styles.fixed.imageTag}"
           >
         </picture>
-
-        ${comment('(inefficiently) add noscript support.')}
-        <noscript>
-          <picture classname="gria-image-sources">
-            <source srcset="${props.srcSet}">
-            <img
-              src="${src}"
-              srcset="${props.srcSet}"
-              title="${alt}"
-              alt="${alt}"
-              loading="lazy"
-              style="${styles.fixed.imageTag}"
-            >
-          </picture>
-        </noscript>
       </div>
     `
   }

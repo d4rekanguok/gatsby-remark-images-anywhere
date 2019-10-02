@@ -78,6 +78,7 @@ const addImage = async (
       // handle relative path (./image.png, ../image.png)
       let filePath: string
       if (url[0] === '.') filePath = path.join(dirPath, url)
+      
       // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, staticDir, url)
 
