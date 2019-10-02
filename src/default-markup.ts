@@ -1,3 +1,5 @@
+import { CreateMarkup } from './type'
+
 /**
  * Only show comment during develop
  */
@@ -6,7 +8,7 @@ const comment: Comment = text => process.env.NODE_ENV !== 'production'
   ? `<!--${text}-->`
   : ``
 
-export const defaultMarkup = ({
+export const defaultMarkup: CreateMarkup = ({
   title,
   alt,
   originSrc,
@@ -16,7 +18,16 @@ export const defaultMarkup = ({
   // fluid: base64, srcSet, scrSetType, sizes, originalImg, density, presentationWidth, presentationHeight
   // fixed: base64, srcSet, tracedSVG, width, height
   // resize: absolutePath, finishedPromise, tracedSVG, width, height
-}) => {
+}, markupOptions) => {
+  if (!markupOptions) throw new Error('[gatsby-remark-images-anywhere] createMarkup: No options')
+  const {
+    loading,
+    linkImagesToOriginal,
+    showCaptions,
+    wrapperStyle,
+    backgroundColor,
+  } = markupOptions
+  
   const styles = {
     fluid: {
       imageWrapper: `
@@ -69,9 +80,7 @@ export const defaultMarkup = ({
         height: ${props.height || 'auto'};
       `,
       solidPlaceholder: `
-        background-color: ${props.backgroundColor ||
-          props.dominateColor ||
-          'inherit'};
+        background-color: 'inherit';
         width: ${props.width || 'auto'};
         height: ${props.height || 'auto'};
       `,
@@ -144,7 +153,7 @@ export const defaultMarkup = ({
             sizes="${props.sizes}"
             title="${alt}"
             alt="${alt}"
-            loading="lazy"
+            loading=${loading}
             style="${styles.fluid.imageTag}"
           >
         </picture>
@@ -232,4 +241,6 @@ export const defaultMarkup = ({
   if (props.sharpMethod === 'resize') {
     return `<img src="${src}" alt="${alt}">`
   }
+  
+  return ''
 }

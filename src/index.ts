@@ -1,7 +1,7 @@
 import path = require('path')
 import select = require('unist-util-select')
 
-import { RemarkNode, Args, Options, CreateMarkupArgs } from './type'
+import { RemarkNode, Args, Options } from './type'
 import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
 import { defaultMarkup } from './default-markup'
@@ -26,6 +26,14 @@ const addImage = async (
     staticDir = 'static',
     createMarkup = defaultMarkup,
     sharpMethod = 'fluid',
+
+    // markup options
+    loading = 'lazy',
+    linkImagesToOriginal = false,
+    showCaptions = false,
+    wrapperStyle = '',
+    backgroundColor = '#fff',
+
     ...imageOptions
   } = pluginOptions
 
@@ -98,7 +106,13 @@ const addImage = async (
       ...imageResult,
     }
     node.type = 'html'
-    node.value = createMarkup(data)
+    node.value = createMarkup(data, {
+      loading,
+      linkImagesToOriginal,
+      showCaptions,
+      wrapperStyle,
+      backgroundColor,
+    })
 
     return null
   })
