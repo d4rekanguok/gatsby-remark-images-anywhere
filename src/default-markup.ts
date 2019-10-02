@@ -1,4 +1,12 @@
-const defaultMarkup = ({
+/**
+ * Only show comment during develop
+ */
+type Comment = (text: string) => string
+const comment: Comment = text => process.env.NODE_ENV !== 'production'
+  ? `<!--${text}-->`
+  : ``
+
+export const defaultMarkup = ({
   title,
   alt,
   originSrc,
@@ -92,9 +100,6 @@ const defaultMarkup = ({
       `,
     },
   }
-
-  // this is silly, but I wanted comments to be clearer during development:
-  const comment = text => `<!--${text}-->`
 
   if (props.sharpMethod === 'fluid') {
     return `
@@ -228,5 +233,3 @@ const defaultMarkup = ({
     return `<img src="${src}" alt="${alt}">`
   }
 }
-
-export default defaultMarkup

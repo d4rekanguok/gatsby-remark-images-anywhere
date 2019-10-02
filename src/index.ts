@@ -4,7 +4,7 @@ import select = require('unist-util-select')
 import { RemarkNode, Args, Options, CreateMarkupArgs } from './type'
 import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
-import defaultMarkup from './default-markup'
+import { defaultMarkup } from './default-markup'
 
 const addImage = async (
   {
