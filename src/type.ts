@@ -31,6 +31,7 @@ export interface SharpResult {
   presentationHeight?: number;
   presentationWidth?: number;
   sizes?: string;
+  originalImg?: string;
 }
 
 

@@ -1,5 +1,13 @@
 import { CreateMarkup } from './type'
 
+const CLASS_WRAPPER = 'gria-image-wrapper'
+const CLASS_PADDING = 'gria-image-padding'
+const CLASS_LINK = 'gria-image-link'
+const CLASS_SOURCES = 'gria-image-sources'
+const CLASS_PH_SOLID = 'gria-solid-placeholder'
+const CLASS_PH_BASE64 = 'gria-base64-placeholder'
+const CLASS_PH_SVG = 'gria-tracedSVG-placeholder'
+
 /**
  * Only show comment during develop
  */
@@ -13,7 +21,10 @@ const handleWrapperStyle: HandleWrapperStyle = (wrapperStyle, data) => {
   if (typeof wrapperStyle === 'function') {
     return wrapperStyle(data)
   }
-  return wrapperStyle
+  if (typeof wrapperStyle === 'string') {
+    return wrapperStyle
+  }
+  console.warn('[gatsby-remark-images-anywhere] wrapperStyle is expected to be either a string or a function.')
 }
 
 export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
@@ -124,25 +135,27 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
     },
   }
 
+  let markup = ''
+
   if (props.sharpMethod === 'fluid') {
-    return `
-      <div class="gria-image-wrapper" style="${styles.fluid.imageWrapper}">
+    markup = `
+      <div class="${CLASS_WRAPPER}" style="${styles.fluid.imageWrapper}">
 
         ${comment('preserve the aspect ratio')}
-        <div class="gria-image-padding" style="${
+        <div class="${CLASS_PADDING}" style="${
           styles.fluid.imagePadding
         }"></div>
 
         ${comment('show a solid background color.')}
         <div
-          class="gria-solid-placeholder"
+          class="${CLASS_PH_SOLID}"
           title="${alt}"
           style="${styles.fluid.solidPlaceholder}">
         </div>
 
         ${comment('show the blurry base64 image.')}
         <img
-          class="gria-base64-placeholder"
+          class="${CLASS_PH_BASE64}"
           src="${props.base64}"
           title="${alt}"
           alt="${alt}"
@@ -151,7 +164,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
 
         ${comment('show a traced SVG image.')}
         <img
-          class="gria-tracedSVG-placeholder"
+          class="${CLASS_PH_SVG}"
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
@@ -159,7 +172,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
         >
 
         ${comment('load the image sources.')}
-        <picture classname="gria-image-sources">
+        <picture classname="${CLASS_SOURCES}">
           <source srcset="${props.srcSet}" sizes="${props.sizes}">
           <img
             src="${src}"
@@ -176,19 +189,19 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
   }
 
   if (props.sharpMethod === 'fixed') {
-    return `
-      <div class="gria-image-wrapper" style="${styles.fixed.imageWrapper}">
+    markup = `
+      <div class="${CLASS_WRAPPER}" style="${styles.fixed.imageWrapper}">
 
         ${comment('show a solid background color.')}
         <div
-          class="gria-solid-placeholder"
+          class="${CLASS_PH_SOLID}"
           title="${alt}"
           style="${styles.fixed.solidPlaceholder}">
         </div>
 
         ${comment('show the blurry base64 image.')}
         <img
-          class="gria-base64-placeholder"
+          class="${CLASS_PH_BASE64}"
           src="${props.base64}"
           title="${alt}"
           alt="${alt}"
@@ -197,7 +210,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
 
         ${comment('show a traced SVG image.')}
         <img
-          class="gria-tracedSVG-placeholder"
+          class="${CLASS_PH_SVG}"
           src="${props.tracedSVG}"
           title="${alt}"
           alt="${alt}"
@@ -205,7 +218,7 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
         >
 
         ${comment('load the image sources.')}
-        <picture classname="gria-image-sources">
+        <picture classname="${CLASS_SOURCES}">
           <source srcset="${props.srcSet}">
           <img
             src="${src}"
@@ -222,8 +235,20 @@ export const defaultMarkup: CreateMarkup = (data, markupOptions) => {
 
   // TODO: markup for the resize sharpMethods (?), placeholder below:
   if (props.sharpMethod === 'resize') {
-    return `<img src="${src}" alt="${alt}">`
+    markup = `<img src="${src}" alt="${alt}">`
+  }
+
+  // only fluid returns original image
+  if (linkImagesToOriginal) {
+    markup = `
+      <a 
+        class="${CLASS_LINK}"
+        target="_blank" 
+        rel="noopener"
+        style="display: block;"
+        href="${props.originalImg || src}"
+      >${markup}</a>`
   }
   
-  return ''
+  return markup
 }
