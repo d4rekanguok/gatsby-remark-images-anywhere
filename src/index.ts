@@ -48,7 +48,7 @@ const addImage = async ({
     if (!url) return
 
     let gImgFileNode
-    if (url.includes('http')) {
+    if (url.startsWith('http')) {
       // handle remote path
       gImgFileNode = await downloadImage({
         id: markdownNode.id,

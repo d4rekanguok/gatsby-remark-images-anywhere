@@ -19,15 +19,18 @@ export const downloadImage = async ({
   const cacheMediaData = await cache.get(mediaDataCacheKey)
 
   if (cacheMediaData && cacheMediaData.fileNodeId) {
-    const fileNode = getNode(cacheMediaData.fileNodeId)
+    const fileNodeId = cacheMediaData.fileNodeId
+    const fileNode = getNode(fileNodeId)
 
     if (fileNode) {
-      imageFileNode = fileNode
       touchNode({
-        nodeId: fileNode.id,
+        nodeId: fileNodeId,
       })
-    }
-  } else {
+      imageFileNode = fileNode
+    } 
+  }
+  
+  if (!imageFileNode) {
     try {
       const imageUrl = process.env.LOW_WIFI_MODE
         ? 'https://placekitten.com/1200/800'
