@@ -15,7 +15,7 @@ export const downloadImage = async ({
   reporter,
 }) => {
   let imageFileNode
-  const mediaDataCacheKey = `${id}-${url}`
+  const mediaDataCacheKey = `gria-${url}`
   const cacheMediaData = await cache.get(mediaDataCacheKey)
 
   if (cacheMediaData && cacheMediaData.fileNodeId) {
