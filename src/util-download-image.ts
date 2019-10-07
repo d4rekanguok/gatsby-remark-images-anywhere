@@ -48,7 +48,7 @@ export const downloadImage = async ({
       if (fileNode) {
         imageFileNode = fileNode
         await cache.set(mediaDataCacheKey, {
-          fileNodeId: fileNode.id
+          fileNodeId: fileNode.id,
         })
       }
     } catch (e) {

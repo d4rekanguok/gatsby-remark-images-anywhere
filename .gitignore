@@ -2,4 +2,10 @@ node_modules
 index.js
 util-download-image.js
 util-html-to-md.js
+gatsby-browser.js
+constants.js
 type.js
+default-markup.js
+package-lock.json
+.vscode/settings.json
+.DS_Store
