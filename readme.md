@@ -2,6 +2,17 @@
 
 > Work in progress
 
+---
+### Update: Better Markup
+
+Thanks to [@fartinmartin](https://github.com/fartinmartin), markup has gotten a lot better! Give it a try:
+
+```
+yarn add gatsby-remark-images-anywhere@beta
+```
+---
+
+
 Get image from anywhere in your markdown:
 
 ```
