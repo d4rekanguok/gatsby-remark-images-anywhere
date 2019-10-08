@@ -2,9 +2,36 @@ const Img = require(`gatsby-image`);
 const React = require(`react`);
 const ReactDOMServer = require(`react-dom/server`);
 
-export const createMarkup = data => {
+const getImageSrc = ({ content, getImageAlt }) => {
+  const hasOgImage = (content && content.match(/src="\/static\/.+?"/m)) ||
+    (content && [content]) || [""];
+
+  const ogImage = hasOgImage[0].match(/\/static\/.+?(\.jpeg|\.jpg|\.png)/) || [
+    ""
+  ];
+
+  let ogImageAlt = ``;
+
+  if (getImageAlt) {
+    ogImageAlt = (content && content.match(/alt=".+?"/gms)) || [``];
+    const altIndex = ogImageAlt.length > 1 ? 1 : 0;
+    ogImageAlt = ogImageAlt[altIndex].substring(
+      5,
+      ogImageAlt[altIndex].length - 1
+    );
+  }
+
+  return { imageSrc: ogImage[0], imageAlt: ogImageAlt };
+};
+
+const createMarkup = ({
+  fluidResult,
+  linkImagesToOriginal,
+  imageNodeId,
+  title
+}) => {
   const imgOptions = {
-    fluid: data.fluidResult,
+    fluid: fluidResult,
     style: {
       margin: "0 auto",
       maxWidth: "100%"
@@ -12,17 +39,16 @@ export const createMarkup = data => {
     imgStyle: {
       opacity: 1
     },
-    key: imageNode.id,
+    key: imageNodeId,
     title: title,
     alt: title,
     loading: "eager"
   };
 
-  const imageLink = getImageSrc({ content: data.fluidResult.originalImg })
-    .imageSrc;
+  const imageLink = getImageSrc({ content: fluidResult.originalImg }).imageSrc;
 
   const ReactImgEl = React.createElement(Img.default, imgOptions, null);
-  const AnchorEl = options.linkImagesToOriginal
+  const AnchorEl = linkImagesToOriginal
     ? React.createElement("a", { href: imageLink, key: imageLink }, ReactImgEl)
     : ReactImgEl;
 
@@ -51,3 +77,5 @@ export const createMarkup = data => {
 
   return ReactDOMServer.renderToString(Figure);
 };
+
+module.exports = { createMarkup };
