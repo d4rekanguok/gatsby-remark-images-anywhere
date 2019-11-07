@@ -45,11 +45,18 @@ const addImage = async ({
 
   imgNodes.push(...htmlImgNodes)
   const processPromises = imgNodes.map(async node => {
-    const url = node.url
+    let url = node.url
     if (!url) return
 
     let gImgFileNode
-    if (url.startsWith('http') || isWhitelisted(url)) {
+
+    // handle relative protocol domains, i.e from contentful
+    // append these url with https
+    if (isWhitelisted(url)) {
+      url = `https:${url}`
+    }
+
+    if (url.startsWith('http')) {
       // handle remote path
       gImgFileNode = await downloadImage({
         id: markdownNode.id,

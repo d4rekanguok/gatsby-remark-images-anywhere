@@ -4,7 +4,7 @@ const rpWhitelist = [
 
 type MakeWhitelistTest = (whitelist: string[]) => (url: string) => boolean
 export const makeWhitelistTest: MakeWhitelistTest = whitelist => url => {
-  const result = whitelist.find(domain => url.includes(domain))
+  const result = whitelist.find(domain => url.startsWith(`//${domain}`))
   return Boolean(result)
 }
 
