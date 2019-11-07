@@ -9,3 +9,7 @@ default-markup.js
 package-lock.json
 .vscode/settings.json
 .DS_Store
+type.js
+relative-protocol-whitelist.js
+yarn-error.log
+.nyc_output

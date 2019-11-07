@@ -5,3 +5,4 @@
 !default-markup.js
 !gatsby-browser.js
 !constants.js
+!relative-protocol-whitelist.js

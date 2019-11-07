@@ -5,6 +5,7 @@ import { RemarkNode, Args, Options } from './type'
 import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
 import { defaultMarkup } from './default-markup'
+import { isWhitelisted } from './relative-protocol-whitelist'
 
 const addImage = async (
   {
@@ -59,10 +60,17 @@ const addImage = async (
 
   imgNodes.push(...htmlImgNodes)
   const processPromises = imgNodes.map(async node => {
-    const url: string = node.url
+    let url: string = node.url
     if (!url) return
 
     let gImgFileNode
+
+    // handle relative protocol domains, i.e from contentful
+    // append these url with https
+    if (isWhitelisted(url)) {
+      url = `https:${url}`
+    }
+
     if (url.startsWith('http')) {
       // handle remote path
       gImgFileNode = await downloadImage({
