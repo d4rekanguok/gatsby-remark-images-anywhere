@@ -3,3 +3,6 @@ index.js
 util-download-image.js
 util-html-to-md.js
 type.js
+relative-protocol-whitelist.js
+yarn-error.log
+.nyc_output

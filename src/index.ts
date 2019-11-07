@@ -4,6 +4,7 @@ import select = require('unist-util-select')
 import { RemarkNode, Args, Options, CreateMarkupArgs } from './type'
 import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
+import { isWhitelisted } from './relative-protocol-whitelist'
 
 const defaultMarkup = ({ src }: CreateMarkupArgs) => `<img class="gatsby-remark-images-extra" src="${src}"/>`
 
@@ -48,7 +49,7 @@ const addImage = async ({
     if (!url) return
 
     let gImgFileNode
-    if (url.startsWith('http')) {
+    if (url.startsWith('http') || isWhitelisted(url)) {
       // handle remote path
       gImgFileNode = await downloadImage({
         id: markdownNode.id,
@@ -65,6 +66,7 @@ const addImage = async ({
       // handle relative path (./image.png, ../image.png)
       let filePath: string
       if (url[0] === '.') filePath = path.join(dirPath, url)
+
       // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, staticDir, url)
 
