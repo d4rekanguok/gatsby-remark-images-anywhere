@@ -6,6 +6,7 @@ import { downloadImage, processImage } from './util-download-image'
 import { toMdNode } from './util-html-to-md'
 import { defaultMarkup } from './default-markup'
 import { isWhitelisted } from './relative-protocol-whitelist'
+import { SUPPORT_EXTS } from './constants'
 
 const addImage = async (
   {
@@ -97,6 +98,7 @@ const addImage = async (
       )
     }
     if (!gImgFileNode) return
+    if (!SUPPORT_EXTS.includes(gImgFileNode.extension)) return
 
     const imageResult = await processImage({
       file: gImgFileNode,
