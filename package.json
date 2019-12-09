@@ -1,6 +1,6 @@
 {
   "name": "gatsby-remark-images-anywhere",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Handle images with relative, absolute, remote path for gatsby-transformer-remark",
   "main": "index.js",
   "scripts": {
