@@ -55,7 +55,7 @@ const addImage = async (
 
   const imgNodes: RemarkNode[] = select.selectAll('image[url]', mdast)
   const htmlImgNodes: RemarkNode[] = select
-    .selectAll('html', mdast)
+    .selectAll('html, jsx', mdast)
     .map(node => toMdNode(node))
     .filter(node => !!node)
 
