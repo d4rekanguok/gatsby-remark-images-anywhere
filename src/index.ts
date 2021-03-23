@@ -1,5 +1,6 @@
 import path = require('path')
 import select = require('unist-util-select')
+import slash = require('slash')
 
 import { RemarkNode, Args, Options } from './type'
 import { downloadImage, processImage } from './util-download-image'
@@ -56,11 +57,11 @@ const addImage = async (
   const imgNodes: RemarkNode[] = select.selectAll('image[url]', mdast)
   const htmlImgNodes: RemarkNode[] = select
     .selectAll('html, jsx', mdast)
-    .map(node => toMdNode(node))
-    .filter(node => !!node)
+    .map((node) => toMdNode(node))
+    .filter((node) => !!node)
 
   imgNodes.push(...htmlImgNodes)
-  const processPromises = imgNodes.map(async node => {
+  const processPromises = imgNodes.map(async (node) => {
     let url: string = node.url
     if (!url) return
 
@@ -88,13 +89,13 @@ const addImage = async (
     } else {
       // handle relative path (./image.png, ../image.png)
       let filePath: string
-      if (url[0] === '.') filePath = path.join(dirPath, url)
-      
+      if (url[0] === '.') filePath = slash(path.join(dirPath, url))
       // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, staticDir, url)
 
       gImgFileNode = files.find(
-        fileNode => fileNode.absolutePath && fileNode.absolutePath === filePath
+        (fileNode) =>
+          fileNode.absolutePath && fileNode.absolutePath === filePath
       )
     }
     if (!gImgFileNode) return
