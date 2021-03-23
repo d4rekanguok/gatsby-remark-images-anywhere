@@ -57,11 +57,11 @@ const addImage = async (
   const imgNodes: RemarkNode[] = select.selectAll('image[url]', mdast)
   const htmlImgNodes: RemarkNode[] = select
     .selectAll('html, jsx', mdast)
-    .map((node) => toMdNode(node))
-    .filter((node) => !!node)
+    .map(node => toMdNode(node))
+    .filter(node => !!node)
 
   imgNodes.push(...htmlImgNodes)
-  const processPromises = imgNodes.map(async (node) => {
+  const processPromises = imgNodes.map(async node => {
     let url: string = node.url
     if (!url) return
 
@@ -94,8 +94,7 @@ const addImage = async (
       else filePath = path.join(directory, staticDir, url)
 
       gImgFileNode = files.find(
-        (fileNode) =>
-          fileNode.absolutePath && fileNode.absolutePath === filePath
+        fileNode => fileNode.absolutePath && fileNode.absolutePath === filePath
       )
     }
     if (!gImgFileNode) return
