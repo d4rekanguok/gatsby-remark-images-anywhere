@@ -1,5 +1,6 @@
 import path = require('path')
 import select = require('unist-util-select')
+import slash = require('slash')
 
 import { RemarkNode, Args, Options } from './type'
 import { downloadImage, processImage } from './util-download-image'
@@ -88,8 +89,7 @@ const addImage = async (
     } else {
       // handle relative path (./image.png, ../image.png)
       let filePath: string
-      if (url[0] === '.') filePath = path.join(dirPath, url)
-      
+      if (url[0] === '.') filePath = slash(path.join(dirPath, url))
       // handle path returned from netlifyCMS & friends (/assets/image.png)
       else filePath = path.join(directory, staticDir, url)
 
