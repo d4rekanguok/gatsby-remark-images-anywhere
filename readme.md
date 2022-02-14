@@ -100,7 +100,7 @@ Your projects need to have...
      * A function that return string template for image
      * All sharp result will be passed in as arguments
      */
-    createMarkup: ({ src, srcSet }) => `<img src="${src}" srcSet="${srcSet}" class="hey" />`
+    createMarkup: ({ src, srcSet }) => `<img src="${src}" srcSet="${srcSet}" class="hey" />`,
 
     /**
      * @param {'lazy' | 'eager' | 'auto'} loading 
